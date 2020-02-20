@@ -1,5 +1,7 @@
-﻿using Grpc.Net.Client;
+﻿using Grpc.Core;
+using Grpc.Net.Client;
 using MyServer;
+using Polly;
 using System;
 using System.Threading.Tasks;
 
@@ -14,10 +16,24 @@ namespace MyClient
             using var channel = GrpcChannel.ForAddress("https://localhost:5001");
             var client = new Greeter.GreeterClient(channel);
 
-            var reply = await client.SayHelloAsync(
-                              new HelloRequest { Name = "Codehaks" });
+            var maxRetryAttempts = 3;
+            var pauseBetweenFailures = TimeSpan.FromSeconds(3);
 
-            Console.WriteLine(reply.Message);
+            var retryPolicy = Policy
+                .Handle<RpcException>()
+                .WaitAndRetryAsync(maxRetryAttempts, i => pauseBetweenFailures,(ex,pause)=> {
+                    Console.WriteLine(ex.Message + " => " +pause.TotalSeconds);
+                });
+
+            await retryPolicy.ExecuteAsync(async () =>
+            {
+                var reply = await client.SayHelloAsync(
+                             new HelloRequest { Name = "Codehaks" },null,DateTime.UtcNow.AddSeconds(3));
+
+                Console.WriteLine(reply.Message);
+            });
+
+           
         }
     }
 }
