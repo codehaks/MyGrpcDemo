@@ -16,7 +16,7 @@ namespace MyClient
             using var channel = GrpcChannel.ForAddress("https://localhost:5001");
             var client = new Greeter.GreeterClient(channel);
 
-            var maxRetryAttempts = 3;
+            var maxRetryAttempts = 10;
             var pauseBetweenFailures = TimeSpan.FromSeconds(3);
 
             var retryPolicy = Policy
