@@ -21,14 +21,15 @@ namespace MyClient
 
             var retryPolicy = Policy
                 .Handle<RpcException>()
-                .WaitAndRetryAsync(maxRetryAttempts, i => pauseBetweenFailures,(ex,pause)=> {
+                .WaitAndRetryAsync(maxRetryAttempts,
+                i => pauseBetweenFailures,(ex,pause)=> {
                     Console.WriteLine(ex.Message + " => " +pause.TotalSeconds);
                 });
 
             await retryPolicy.ExecuteAsync(async () =>
             {
                 var reply = await client.SayHelloAsync(
-                             new HelloRequest { Name = "Codehaks" },null,DateTime.UtcNow.AddSeconds(3));
+                             new HelloRequest { Name = "Codehaks" },null,DateTime.UtcNow.AddSeconds(2));
 
                 Console.WriteLine(reply.Message);
             });
