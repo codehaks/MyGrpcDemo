@@ -15,7 +15,11 @@ namespace MyClient
             var client = new Greeter.GreeterClient(channel);
 
             var reply = await client.SayHelloAsync(
-                              new HelloRequest { Name = "Codehaks" });
+                              new HelloRequest
+                              {
+                                  Name = "Codehaks",
+                                  WeatherType = WeatherType.Raining
+                              });
 
             Console.WriteLine(reply.Message);
         }

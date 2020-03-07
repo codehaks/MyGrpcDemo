@@ -10,9 +10,16 @@ service Greeter {
   rpc SayHello (HelloRequest) returns (HelloReply);
 }
 
+enum WeatherType{
+    Sunny=0;
+    Raining=1;
+    Windy=2;
+}
+
 // The request message containing the user's name.
 message HelloRequest {
   string name = 1;
+  WeatherType weatherType=2;
 }
 
 // The response message containing the greetings.
