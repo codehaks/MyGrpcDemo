@@ -27,8 +27,8 @@ namespace MyWebClient.Controllers
             return View();
         }
 
-        [Route("api/hi")]
-        public async Task<IActionResult> Hello()
+        [Route("api/hi/{message}")]
+        public async Task<IActionResult> Hello(string message)
         {
             using var channel = GrpcChannel.ForAddress("https://localhost:5001");
             var client = new Greeter.GreeterClient(channel);
@@ -49,7 +49,7 @@ namespace MyWebClient.Controllers
             await retryPolicy.ExecuteAsync(async () =>
                {
                    reply = await client.SayHelloAsync(
-                                new HelloRequest { Name = "Codehaks" }, null, DateTime.UtcNow.AddSeconds(2));
+                                new HelloRequest { Name = message }, null, DateTime.UtcNow.AddSeconds(2));
                    
                });
 

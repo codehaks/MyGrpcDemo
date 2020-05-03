@@ -21,7 +21,7 @@ namespace MyServer
 
             return new HelloReply
             {
-                Message = "Hello " + request.Name
+                Message = "Hello " + request.Name + " - " + DateTime.Now.ToShortTimeString()
             };
         }
     }
